@@ -8,6 +8,8 @@ public interface ServiceInterface <T>{
     T create(T obj);
     void delete(T obj);
     void deleteById(String id);
+    T find(T obj);
     T findById(String id);
     boolean objectIsExist(T obj);
+
 }
