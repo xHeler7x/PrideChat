@@ -34,8 +34,7 @@ public class UserService implements ServiceInterface<User> {
 
     @Override
     public void delete(User obj) {
-        getList().stream().filter( user -> user.equals(obj))
-                .findAny().ifPresent( user -> userRepository.delete(user));
+        userRepository.delete(obj);
     }
 
     @Override
