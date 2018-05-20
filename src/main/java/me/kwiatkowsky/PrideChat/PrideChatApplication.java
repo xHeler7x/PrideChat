@@ -24,9 +24,5 @@ public class PrideChatApplication implements CommandLineRunner{
 	@Override
 	public void run(String... args) throws Exception {
 
-		userService.getList().forEach(user -> userService.delete(user));
-
-		User user = new User("admin123", "qwerty123");
-		userService.create(user);
 	}
 }

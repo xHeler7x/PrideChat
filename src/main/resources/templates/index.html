@@ -5,55 +5,63 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
     <meta name="author" content="">
-
-    <title>PrideChat</title>
+    <title>PrideChat | Home</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/main.css}"/>
 
     <link rel="stylesheet" th:href="@{/webjars/bootstrap/4.1.0/css/bootstrap.min.css}" />
 
     <script th:src="@{/webjars/jquery/3.3.1-1/jquery.min.js}"></script>
     <script th:src="@{/webjars/bootstrap/4.1.0/js/bootstrap.min.js}"></script>
+
 </head>
 <body>
+<noscript>
+    <h2>Sorry! Your browser doesn't support Javascript</h2>
+</noscript>
+
 <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
     <a class="navbar-brand" href="#">PrideChat</a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
-        <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="collapsibleNavbar">
-        <ul class="navbar-nav">
-            <li class="nav-item">
-                <a class="nav-link btn btn-outline-secondary" href="#">Home</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link btn btn-outline-secondary" href="#">Login</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link btn btn-outline-secondary" href="#">Logout</a>
-            </li>
-        </ul>
-    </div>
+    <ul class="navbar-nav ml-auto">
+        <li class="nav-item">
+            <a class="nav-link disabled" href="#" th:text="${username}"></a>
+        </li>
+        <li class="nav-item">
+            <form name="logoutForm" method="post" th:action="@{/app/logout}">
+                <button type="submit" class="btn-primary">Wyloguj się</button>
+            </form>
+        </li>
+    </ul>
 </nav>
 
-<div class="container">
-    <div class="row">
-        <div class="col-sm-3">
-
+<input type="hidden" name="username" id="username" th:value="${username}">
+<div id="chat-page">
+    <div class="chat-container">
+        <div class="chat-header">
         </div>
+        <div class="connecting">
+            Łączenie...
+        </div>
+        <ul id="messageArea">
 
-        <div class="col-sm-6">
-            <div class="shadow-none p-2 mb-4 bg-light"></div>
-            <div class="media border p-1">
-                <img src="img_avatar3.png" alt="USERNAME" class="mr-3 mt-3 rounded-circle" style="width:30px;">
-                <div class="media-body">
-                    <h6>USERNAME <small><i>18-05-2018</i></small></h6>
-                    <p>Jakis randomowy text.</p>
+        </ul>
+        <form id="messageForm" name="messageForm">
+            <div class="form-group">
+                <div class="input-group clearfix">
+                    <input type="text" id="message" placeholder="Treść wiadomości..." autocomplete="off"
+                           class="form-control"/>
+                    <button type="submit" class="btn btn-primary" style="margin-bottom:4px;white-space: normal;">
+                        Wyślij
+                    </button>
                 </div>
             </div>
-        </div>
-        <div class="col-sm-3">
-
-        </div>
+        </form>
     </div>
 </div>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.1.4/sockjs.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+<script th:inline="javascript" type="text/javascript" th:src="@{/js/main.js}"></script>
+
 </body>
 </html>

@@ -12,7 +12,6 @@ public class ChatMessage {
     private String sender;
 
     public ChatMessage(){
-        this.sender = session.getUser().getUsername();
     }
 
     public enum MessageType{

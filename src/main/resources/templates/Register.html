@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>PrideChat | Register</title>
+
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/4.1.0/css/bootstrap.min.css}" />
+
+    <script th:src="@{/webjars/jquery/3.3.1-1/jquery.min.js}"></script>
+    <script th:src="@{/webjars/bootstrap/4.1.0/js/bootstrap.min.js}"></script>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.8/css/all.css">
+</head>
+<body>
+
+<div class="container">
+    <div class="row">
+        <div class="col-lg-4"></div>
+        <div class="col-lg-4">
+            <div class="shadow-none p-3 mb-4 bg-light"></div>
+            <div class="d-flex justify-content-center">
+                <a class="navbar-brand text-dark" href="#"><h1>PrideChat</h1></a>
+            </div>
+            <div class="card">
+                <div class="shadow-none p-1 mb-2 bg-light"></div>
+                <h4 class="card-title text-center mb-4 mt-1">Rejestracja</h4>
+                <form name="f" th:object="${user}" th:action="@{/app/register}" method="post">
+                    <div class="form-group">
+                        <div class="col text-center">
+                            <p class="text-danger" th:if="${#fields.hasErrors('username')}" th:errors="*{username}"/>
+                            <p class="text-danger" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"/>
+                        </div>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"> <i class="fa fa-user"></i> </span>
+                            </div>
+                            <input name="username" class="form-control" placeholder="Login" type="username">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"> <i class="fa fa-lock"></i> </span>
+                            </div>
+                            <input class="form-control"  name="password" placeholder="Hasło" type="password">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"> <i class="fa fa-lock"></i> </span>
+                            </div>
+                            <input class="form-control"  name="repassword" placeholder="Powtórz-Hasło" type="password">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <a href="/app/login">
+                            <p class="card-title text-left mb-4 mt-1"> <u> Zaloguj się teraz! </u></p>
+                        </a>
+                        <div class="form-action">
+                            <button type="submit" class="btn btn-dark btn-block">Zarejestruj się</button>
+                        </div>
+                    </div>
+                </form>
+                </article>
+            </div>
+        </div>
+        <div class="col-lg-4"></div>
+
+    </div>
+</div>
+</body>
+</html>

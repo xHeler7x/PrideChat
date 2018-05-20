@@ -14,12 +14,14 @@ public class User {
     private String id;
 
     @NotNull
-    @Size(min = 7, max = 16, message = "Nazwa użytkownika musi zawierać od 7 do 16 znaków!")
+    @Size(min = 7, max = 16, message = "Login musi zawierać od 7 do 16 znaków!")
     private String username;
 
     @NotNull
-    @Size(min = 7, max = 16, message = "Hasło użytkownika musi zawierać od 7 do 16 znaków!")
+    @Size(min = 7, max = 16, message = "Hasło musi zawierać od 7 do 16 znaków!")
     private String password;
+
+    private String repassword;
 
     public User(){
 
@@ -32,11 +34,12 @@ public class User {
         this.username = username;
     }
 
-    public String getId(){
-        return this.id;
+
+    public String getId() {
+        return id;
     }
 
-    public void setId(String id){
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -54,6 +57,13 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
+    }
 
+    public String getRepassword() {
+        return repassword;
+    }
+
+    public void setRepassword(String repassword) {
+        this.repassword = repassword;
     }
 }

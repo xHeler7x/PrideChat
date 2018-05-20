@@ -10,9 +10,10 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
-import java.util.List;
 
 @Controller
 public class IssueController {
@@ -23,22 +24,13 @@ public class IssueController {
     @Autowired
     Session session;
 
-    @RequestMapping("/users")
-    public String getUsers(Model model){
-
-        List<User> userList = userService.getList();
-        model.addAttribute("userList", userList);
-
-        return "UserList";
-    }
-
 
     @RequestMapping({"/", "/index", "/index.html"})
     public String home(Model model){
 
         if (session.isLogged()){
 
-            model.addAttribute("user", session.getUser());
+            model.addAttribute("username", session.getUser().getUsername());
             return "index";
         }
 
@@ -56,17 +48,18 @@ public class IssueController {
 
         if (userFinded.getId() == null){
             FieldError fieldError = new FieldError(bindingResult.getObjectName(),
-                    "username", "This user is not exist!");
+                    "username", "Taki użytkownik nie istnieje!");
             bindingResult.addError(fieldError);
-            return "Login";
+            return "Register";
         }
 
         if(!userFinded.getPassword().equals(userEntity.getPassword())){
             FieldError fieldError = new FieldError(bindingResult.getObjectName(),
-                    "username", "Username or password is incorrect!");
+                    "username", "Nazwa użytkownika lub hasło nieprawidłowe");
             bindingResult.addError(fieldError);
             return "Login";
         }
+
         session.setLogged(true);
         session.setUser(userFinded);
 
@@ -79,16 +72,78 @@ public class IssueController {
         if (session.isLogged()) return "redirect:/index";
         model.addAttribute("user", new User());
 
+        try{
+            String dialog = (String) model.asMap().get("dialog");
+            model.addAttribute("dialog", dialog);
+        } catch (NullPointerException e){
+            //
+        }
+
         return "Login";
     }
 
-    @RequestMapping(value = "/app/logout")
-    public String logout(Model model){
+    @RequestMapping("/app/register")
+    public String register(Model model){
 
-        if (!session.isLogged()) return "redicted:/index";
+        if (session.isLogged()) return "redirect:/index";
+        model.addAttribute("user", new User());
+
+        return "Register";
+    }
+
+    @RequestMapping(value = "/app/register", method = RequestMethod.POST)
+    public ModelAndView registering(@Valid User userEntity, BindingResult bindingResult, RedirectAttributes
+            redirectAttributes){
+
+        ModelAndView modelAndView = new ModelAndView();
+
+        if (bindingResult.hasErrors()){
+            modelAndView.setViewName("Register");
+            return modelAndView;
+        }
+
+        User userFinded = userService.findByUsername(userEntity.getUsername());
+
+        if (userFinded.getId() != null){
+            FieldError fieldError = new FieldError(bindingResult.getObjectName(),
+                    "username", "Taki użytkownik juz istnieje!");
+            bindingResult.addError(fieldError);
+            modelAndView.setViewName("Register");
+            return modelAndView;
+        }
+
+        if (!userEntity.getPassword().equals(userEntity.getRepassword())){
+            FieldError fieldError = new FieldError(bindingResult.getObjectName(),
+                    "username", "Hasła nie są takie same!");
+            bindingResult.addError(fieldError);
+            modelAndView.setViewName("Register");
+            return modelAndView;
+        }
+
+        User user = new User(userEntity.getUsername(), userEntity.getPassword());
+        userService.create(user);
+
+        redirectAttributes.addFlashAttribute("dialog", "Rejestracja zakończona pomyślnie!");
+
+        modelAndView.setViewName("redirect:/app/login");
+        return modelAndView;
+    }
+
+    @RequestMapping(value = "/app/logout")
+    public ModelAndView logout(Model model, RedirectAttributes redirectAttributes){
+
+        ModelAndView modelAndView = new ModelAndView();
+
+        if (!session.isLogged()){
+            modelAndView.setViewName("redirect:/index");
+            return modelAndView;
+        }
         session.setLogged(false);
         session.setUser(new User());
 
-        return "redirect:/index";
+        redirectAttributes.addFlashAttribute("dialog", "Poprawnie wylogowano!");
+
+        modelAndView.setViewName("redirect:/app/login");
+        return modelAndView;
     }
 }
